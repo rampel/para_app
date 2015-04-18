@@ -1,0 +1,638 @@
+package com.google.zxing.client.android;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+
+@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+@SuppressLint("NewApi")
+public final class CaptureActivity extends Activity implements
+		SurfaceHolder.Callback {
+
+	private static final String TAG = CaptureActivity.class.getSimpleName();
+	private static final String PRODUCT_SEARCH_URL_PREFIX = "http://www.google";
+	private static final String PRODUCT_SEARCH_URL_SUFFIX = "/m/products/scan";
+	private static final String[] ZXING_URLS = {
+			"http://zxing.appspot.com/scan", "zxing://scan/" };
+
+	public static final int HISTORY_REQUEST_CODE = 0x0000bacc;
+	private static CameraManager cameraManager;
+	private CaptureActivityHandler handler;
+	private Result savedResultToShow;
+	private ViewfinderView viewfinderView;
+	private TextView statusView;
+	private View resultView;
+	private int SongId[] = { R.raw.sample1, R.raw.idscan, R.raw.noid,
+			R.raw.guest };
+	private Result lastResult;
+	private boolean hasSurface;
+	private boolean copyToClipboard;
+	private IntentSource source;
+	private String sourceUrl;
+	private ScanFromWebPageManager scanFromWebPageManager;
+	private Collection<BarcodeFormat> decodeFormats;
+	private Map<DecodeHintType, ?> decodeHints;
+	private String characterSet;
+	private BeepManager beepManager;
+	private AmbientLightManager ambientLightManager;
+
+	ViewfinderView getViewfinderView() {
+		return viewfinderView;
+	}
+
+	public Handler getHandler() {
+		return handler;
+	}
+
+	CameraManager getCameraManager() {
+		return cameraManager;
+	}
+
+	FrameLayout framelayout, guest;
+	Button b1, b2, b3, cameraButton, guestButton;
+	static View menuLayout = null;
+	Camera camera;
+	Preview preview;
+	Button buttonClick;
+	ImageView imageview1;
+	String user;
+	String pass;
+	Typeface tf;
+	private CountDownTimer sc;
+	static MediaPlayer mp;
+	static LinearLayout prompt;
+	private static CountDownTimer timer;
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+
+		Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		setContentView(R.layout.activity_main);
+
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+
+		tf = Typeface.createFromAsset(getAssets(),
+				"fonts/MyriadPro-BoldSemiCn.ttf");
+
+		framelayout = (FrameLayout) findViewById(R.id.frame);
+		preview = new Preview(this);
+		prompt = (LinearLayout) findViewById(R.id.mainprompt);
+
+		music.play(this, SongId[0]);
+
+		ScreenSaverTimer();
+
+		Intent intent = getIntent();
+		String promptmessage = intent.getStringExtra("message");
+
+		if (promptmessage != null) {
+			Prompt("Welcome to JIMAC-INC \n " + promptmessage, tf);
+		}
+
+		b1 = (Button) findViewById(R.id.button1);
+		b1.setTypeface(tf);
+		b1.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(arg0.getWindowToken(), 0);
+				prompt.setVisibility(View.VISIBLE);
+				stopPlaying();
+				music.stop(CaptureActivity.this);
+				mp = MediaPlayer.create(getApplicationContext(), SongId[1]);
+				mp.start();
+
+				b1.setClickable(false);
+				UltimateDestroyer();
+				Guest.UltimateDestroyer();
+				NoId.UltimateDestroyer();
+				ScreenSaverUltimateStopper();
+				Backtimer(CaptureActivity.this);
+
+				if (((FrameLayout) framelayout).getChildCount() > 0)
+					((FrameLayout) framelayout).removeAllViews();
+
+				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				menuLayout = inflater.inflate(R.layout.idscan, framelayout,
+						true);
+
+				cameraManager = new CameraManager(getApplication());
+				if (cameraManager.isOpen()) {
+					cameraManager.closeDriver();
+					cameraManager.stopPreview();
+
+				}
+
+				hasSurface = false;
+				beepManager = new BeepManager(CaptureActivity.this);
+				ambientLightManager = new AmbientLightManager(
+						CaptureActivity.this);
+
+				PreferenceManager.setDefaultValues(CaptureActivity.this,
+						R.xml.preferences, false);
+
+				viewfinderView = (ViewfinderView) menuLayout
+						.findViewById(R.id.viewfinder_view);
+				viewfinderView.setCameraManager(cameraManager);
+
+				resultView = menuLayout.findViewById(R.id.result_view);
+				statusView = (TextView) menuLayout
+						.findViewById(R.id.status_view);
+
+				handler = null;
+				lastResult = null;
+
+				resetStatusView();
+
+				SurfaceView surfaceView = (SurfaceView) menuLayout
+						.findViewById(R.id.preview_view);
+				SurfaceHolder surfaceHolder = surfaceView.getHolder();
+				if (hasSurface) {
+					initCamera(surfaceHolder);
+				} else {
+					surfaceHolder.addCallback(CaptureActivity.this);
+					surfaceHolder
+							.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+				}
+
+				beepManager.updatePrefs();
+				ambientLightManager.start(cameraManager);
+
+				Intent intent = getIntent();
+
+				source = IntentSource.NONE;
+				decodeFormats = null;
+				characterSet = null;
+
+				if (intent != null) {
+
+					String action = intent.getAction();
+					String dataString = intent.getDataString();
+
+					if (Intents.Scan.ACTION.equals(action)) {
+						source = IntentSource.NATIVE_APP_INTENT;
+						decodeFormats = DecodeFormatManager
+								.parseDecodeFormats(intent);
+						decodeHints = DecodeHintManager
+								.parseDecodeHints(intent);
+
+						if (intent.hasExtra(Intents.Scan.WIDTH)
+								&& intent.hasExtra(Intents.Scan.HEIGHT)) {
+							int width = intent.getIntExtra(Intents.Scan.WIDTH,
+									0);
+							int height = intent.getIntExtra(
+									Intents.Scan.HEIGHT, 0);
+							if (width > 0 && height > 0) {
+								cameraManager.setManualFramingRect(width,
+										height);
+							}
+						}
+
+						String customPromptMessage = intent
+								.getStringExtra(Intents.Scan.PROMPT_MESSAGE);
+						if (customPromptMessage != null) {
+							statusView.setText(customPromptMessage);
+						}
+
+					} else if (dataString != null
+							&& dataString.contains(PRODUCT_SEARCH_URL_PREFIX)
+							&& dataString.contains(PRODUCT_SEARCH_URL_SUFFIX)) {
+
+						source = IntentSource.PRODUCT_SEARCH_LINK;
+						sourceUrl = dataString;
+						decodeFormats = DecodeFormatManager.PRODUCT_FORMATS;
+
+					} else if (isZXingURL(dataString)) {
+						source = IntentSource.ZXING_LINK;
+						sourceUrl = dataString;
+						Uri inputUri = Uri.parse(dataString);
+						scanFromWebPageManager = new ScanFromWebPageManager(
+								inputUri);
+						decodeFormats = DecodeFormatManager
+								.parseDecodeFormats(inputUri);
+						decodeHints = DecodeHintManager
+								.parseDecodeHints(inputUri);
+
+					}
+
+					characterSet = intent
+							.getStringExtra(Intents.Scan.CHARACTER_SET);
+
+				}
+
+			}
+		});
+
+		b2 = (Button) findViewById(R.id.button2);
+		b2.setTypeface(tf);
+		b2.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				prompt.setVisibility(View.VISIBLE);
+				music.stop(CaptureActivity.this);
+				stopPlaying();
+				mp = MediaPlayer.create(getApplicationContext(), SongId[2]);
+				mp.start();
+
+				b1.setClickable(true);
+				UltimateDestroyer();
+				Guest.UltimateDestroyer();
+				NoId.UltimateDestroyer();
+				ScreenSaverUltimateStopper();
+				if (menuLayout != null) {
+					if (cameraManager.isOpen()) {
+						cameraManager.closeDriver();
+						cameraManager.stopPreview();
+					}
+				}
+
+				if (((FrameLayout) framelayout).getChildCount() > 0)
+					((FrameLayout) framelayout).removeAllViews();
+				NoId.noid(CaptureActivity.this, framelayout, tf, prompt);
+
+				// ScreenSaver.screensaver(CaptureActivity.this, framelayout,
+				// tf);
+
+			}
+		});
+
+		b3 = (Button) findViewById(R.id.button3);
+		b3.setTypeface(tf);
+		b3.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				prompt.setVisibility(View.VISIBLE);
+				UltimateDestroyer();
+				Guest.UltimateDestroyer();
+				NoId.UltimateDestroyer();
+				ScreenSaverUltimateStopper();
+				music.stop(CaptureActivity.this);
+				stopPlaying();
+				mp = MediaPlayer.create(getApplicationContext(), R.raw.guest);
+				mp.start();
+
+				b1.setClickable(true);
+				if (menuLayout != null) {
+					if (cameraManager.isOpen()) {
+						cameraManager.closeDriver();
+						cameraManager.stopPreview();
+					}
+				}
+
+				/*
+				 * if (((FrameLayout) framelayout).getChildCount() > 0)
+				 * ((FrameLayout) framelayout).removeAllViews();
+				 * Guest.guest(CaptureActivity.this, framelayout, tf);
+				 */
+
+				if (((FrameLayout) framelayout).getChildCount() > 0)
+					((FrameLayout) framelayout).removeAllViews();
+
+				GuestValidation.guestvalidation(CaptureActivity.this,
+						framelayout, tf, prompt);
+			}
+		});
+
+	}
+
+	private static boolean isZXingURL(String dataString) {
+		if (dataString == null) {
+			return false;
+		}
+		for (String url : ZXING_URLS) {
+			if (dataString.startsWith(url)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	protected void onDestroy() {
+		// inactivityTimer.shutdown();
+		super.onDestroy();
+	}
+
+	private void decodeOrStoreSavedBitmap(Bitmap bitmap, Result result) {
+		// Bitmap isn't used yet -- will be used soon
+		if (handler == null) {
+			savedResultToShow = result;
+		} else {
+			if (result != null) {
+				savedResultToShow = result;
+			}
+			if (savedResultToShow != null) {
+				Message message = Message.obtain(handler,
+						R.id.decode_succeeded, savedResultToShow);
+				handler.sendMessage(message);
+			}
+			savedResultToShow = null;
+		}
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		if (holder == null) {
+			Log.e(TAG,
+					"*** WARNING *** surfaceCreated() gave us a null surface!");
+		}
+		if (!hasSurface) {
+			hasSurface = true;
+			initCamera(holder);
+		}
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		hasSurface = false;
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+
+	}
+
+	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
+		lastResult = rawResult;
+		ResultHandler resultHandler = ResultHandlerFactory.makeResultHandler(
+				this, rawResult);
+
+		boolean fromLiveScan = barcode != null;
+		if (fromLiveScan) {
+			beepManager.playBeepSoundAndVibrate();
+			drawResultPoints(barcode, scaleFactor, rawResult);
+			try {
+				String scancontent = "" + resultHandler.getDisplayContents();
+				TCPIP(scancontent);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			restartPreviewAfterDelay(2000);
+		}
+
+	}
+
+	public void TCPIP(String print) throws IOException {
+
+		Socket socket = null;
+		PrintWriter out = null;
+
+		try {
+			socket = new Socket("192.168.0.130", 9101);
+
+			if (socket.isConnected()) {
+				out = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						socket.getInputStream()));
+				out.println(print);
+				String message = br.readLine();
+				String messagearray[] = message.split("<->");
+				out.flush();
+				Prompt("Welcome to JIMAC-INC \n " + messagearray[1], tf);
+			}
+		} catch (UnknownHostException e) {
+		} catch (IOException e) {
+		} catch (Exception e) {
+		} finally {
+
+		}
+
+	}
+
+	public void Prompt(String name, Typeface tf) {
+		if (((LinearLayout) prompt).getChildCount() > 0)
+			((LinearLayout) prompt).removeAllViews();
+		TextView tv = new TextView(this);
+		tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		tv.setText(name);
+		tv.setTypeface(tf);
+		tv.setTextSize(40);
+		tv.setTextColor(Color.BLUE);
+		tv.setGravity(Gravity.CENTER);
+		prompt.addView(tv);
+
+	}
+
+	private void drawResultPoints(Bitmap barcode, float scaleFactor,
+			Result rawResult) {
+		ResultPoint[] points = rawResult.getResultPoints();
+		if (points != null && points.length > 0) {
+			Canvas canvas = new Canvas(barcode);
+			Paint paint = new Paint();
+			paint.setColor(getResources().getColor(R.color.result_points));
+			if (points.length == 2) {
+				paint.setStrokeWidth(4.0f);
+				drawLine(canvas, paint, points[0], points[1], scaleFactor);
+			} else if (points.length == 4
+					&& (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult
+							.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
+				drawLine(canvas, paint, points[0], points[1], scaleFactor);
+				drawLine(canvas, paint, points[2], points[3], scaleFactor);
+			} else {
+				paint.setStrokeWidth(10.0f);
+				for (ResultPoint point : points) {
+					canvas.drawPoint(scaleFactor * point.getX(), scaleFactor
+							* point.getY(), paint);
+				}
+			}
+		}
+	}
+
+	private static void drawLine(Canvas canvas, Paint paint, ResultPoint a,
+			ResultPoint b, float scaleFactor) {
+		if (a != null && b != null) {
+			canvas.drawLine(scaleFactor * a.getX(), scaleFactor * a.getY(),
+					scaleFactor * b.getX(), scaleFactor * b.getY(), paint);
+		}
+	}
+
+	private void initCamera(SurfaceHolder surfaceHolder) {
+		if (surfaceHolder == null) {
+			throw new IllegalStateException("No SurfaceHolder provided");
+		}
+		if (cameraManager.isOpen()) {
+			Log.w(TAG,
+					"initCamera() while already open -- late SurfaceView callback?");
+			return;
+		}
+		try {
+			cameraManager.openDriver(surfaceHolder);
+			if (handler == null) {
+				handler = new CaptureActivityHandler(this, decodeFormats,
+						decodeHints, characterSet, cameraManager);
+			}
+			decodeOrStoreSavedBitmap(null, null);
+		} catch (IOException ioe) {
+			Log.w(TAG, ioe);
+			displayFrameworkBugMessageAndExit();
+		} catch (RuntimeException e) {
+			Log.w(TAG, "Unexpected error initializing camera", e);
+			displayFrameworkBugMessageAndExit();
+		}
+	}
+
+	private void displayFrameworkBugMessageAndExit() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.app_name));
+		builder.setMessage(getString(R.string.msg_camera_framework_bug));
+		builder.setPositiveButton(R.string.button_ok, new FinishListener(this));
+		builder.setOnCancelListener(new FinishListener(this));
+		builder.show();
+	}
+
+	public void restartPreviewAfterDelay(long delayMS) {
+		if (handler != null) {
+			handler.sendEmptyMessageDelayed(R.id.restart_preview, delayMS);
+		}
+		resetStatusView();
+	}
+
+	private void resetStatusView() {
+		resultView.setVisibility(View.GONE);
+		statusView.setText(R.string.msg_default_status);
+		statusView.setVisibility(View.VISIBLE);
+		viewfinderView.setVisibility(View.VISIBLE);
+		lastResult = null;
+	}
+
+	public void drawViewfinder() {
+		viewfinderView.drawViewfinder();
+	}
+
+	public static void Backtimer(final Context c) {
+		timer = new CountDownTimer(120000, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+
+			}
+
+			public void onFinish() {
+				if (menuLayout != null) {
+					if (cameraManager.isOpen()) {
+						cameraManager.closeDriver();
+						cameraManager.stopPreview();
+					}
+				}
+
+				Intent intent = new Intent(c, CaptureActivity.class);
+				c.startActivity(intent);
+			}
+		}.start();
+
+	}
+
+	public void ScreenSaverTimer() {
+		sc = new CountDownTimer(10000, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+
+			}
+
+			public void onFinish() {
+				Calendar c = Calendar.getInstance();
+
+				int Hr24 = c.get(Calendar.HOUR_OF_DAY);
+
+				if (Hr24 >= 8 && Hr24 <= 17) {
+					music.play(CaptureActivity.this, SongId[0]);
+				}
+
+				else {
+					music.stop(CaptureActivity.this);
+				}
+				if (((FrameLayout) framelayout).getChildCount() > 0)
+					((FrameLayout) framelayout).removeAllViews();
+				prompt.setVisibility(View.GONE);
+				Prompt("", tf);
+				ScreenSaver.screensaver(CaptureActivity.this, framelayout, tf);
+			}
+		}.start();
+
+	}
+
+	public static void UltimateDestroyer() {
+		if (timer != null) {
+			timer.cancel();
+
+		}
+	}
+
+	public void ScreenSaverUltimateStopper() {
+		if (sc != null) {
+			sc.cancel();
+
+		}
+	}
+
+	private void stopPlaying() {
+		if (mp != null) {
+			mp.stop();
+			mp.release();
+			mp = null;
+		}
+	}
+
+}

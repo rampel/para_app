@@ -1,10 +1,11 @@
 package com.luna.para;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.google.zxing.client.android.CaptureActivity;
 import com.luna.adapter.BaseActivity;
-import com.luna.para.R;
 
 public class SplashScreen extends BaseActivity {
 
@@ -25,6 +26,9 @@ public class SplashScreen extends BaseActivity {
 
 			@Override
 			public void run() {
+				Intent intent = new Intent(SplashScreen.this,
+						CaptureActivity.class);
+				startActivity(intent);
 			}
 		}, TIME_SPLASH);
 

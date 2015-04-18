@@ -1,0 +1,195 @@
+package com.google.zxing.client.android;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
+import android.graphics.Typeface;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
+import android.os.CountDownTimer;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+public class Guest {
+	static FrameLayout framelayout, guest;
+	static Button guestButton;
+	Camera camera;
+	static Preview preview;
+	String user;
+	String pass;
+	Typeface tf;
+	private static CountDownTimer timer;
+	static EditText et1, et2;
+	static Spinner spin;
+	static String[] PURPOSE = { "Choose your Purpose", "Meeting",
+			"Pick-up/Delivery", "Interview", "Affiliates" };
+	static String spin_val = "", message = "";
+	static String picture = "";
+	static Bitmap finalPhoto;
+	static LinearLayout prompt;
+	public static CountDownTimer cameratimer = null;
+
+	public static void guest(final Context c, FrameLayout act, final Typeface tf, final LinearLayout promp) {
+		prompt = promp;
+		LayoutInflater inflater = (LayoutInflater) c
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View menuLayout = inflater.inflate(R.layout.guest, act, true);
+		preview = new Preview(c);
+		guest = (FrameLayout) menuLayout.findViewById(R.id.guestpreview);
+		guest.addView(preview);
+		et1 = (EditText) menuLayout.findViewById(R.id.editText1);
+		et2 = (EditText) menuLayout.findViewById(R.id.editText2);
+		//prompt = (LinearLayout) menuLayout.findViewById(R.id.prompt);
+		BackTimer(c);
+		spin = (Spinner) menuLayout.findViewById(R.id.spinner1);
+
+		spin.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				spin_val = PURPOSE[position];
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				spin_val = PURPOSE[0];
+			}
+
+		});
+		ArrayAdapter aa = new ArrayAdapter(c, R.layout.spiner, PURPOSE);
+		spin.setAdapter(aa);
+		aa.setDropDownViewResource(R.layout.custom_spiner);
+
+		cameratimer = new CountDownTimer(3000, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+			}
+
+			public void onFinish() {
+				preview.camera.takePicture(shutterCallback, rawCallback,
+						jpegCallback);
+			}
+
+		}.start();
+
+		guestButton = (Button) menuLayout.findViewById(R.id.guestbutton);
+		guestButton.setTypeface(tf);
+		guestButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+			
+				if ((et1.getText().toString()).length() > 0
+						&& (et2.getText().toString()).length() > 0
+						&& !spin_val.equals("Choose your Purpose")) {
+					InputMethodManager mgr = (InputMethodManager) c
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(
+							et2.getWindowToken(), 0);
+					Configuration.sendGuestData(et1.getText().toString(), et2
+							.getText().toString(), "", spin_val, preview
+							.Photo());
+
+					Configuration.TCP(et1.getText().toString());
+					Intent intent = new Intent(c, CaptureActivity.class);
+					intent.putExtra("message", "" +et1.getText().toString());
+					c.startActivity(intent);
+					et1.setText("");
+					et2.setText("");
+				
+					
+					UltimateDestroyer();
+					
+				} else {
+					InputMethodManager mgr = (InputMethodManager) c
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(
+							et2.getWindowToken(), 0);
+					Prompt("Please fill up all the fields", c, tf);
+				}
+				}
+		});
+
+	}
+
+	public static void Prompt(String name, Context c, Typeface tf) {
+		if (((LinearLayout) prompt).getChildCount() > 0)
+			((LinearLayout) prompt).removeAllViews();
+		TextView tv = new TextView(c);
+		tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		tv.setText(name);
+		tv.setTypeface(tf);
+		tv.setTextSize(40);
+		tv.setGravity(Gravity.CENTER);
+		prompt.addView(tv);
+
+	}
+
+	static ShutterCallback shutterCallback = new ShutterCallback() {
+		public void onShutter() {
+
+		}
+	};
+
+	static PictureCallback rawCallback = new PictureCallback() {
+
+		public void onPictureTaken(byte[] data, Camera camera) {
+
+		}
+
+		public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
+
+		}
+	};
+
+	static PictureCallback jpegCallback = new PictureCallback() {
+		public void onPictureTaken(byte[] data, Camera camera) {
+
+		}
+
+		public void onPictureTaken(byte[] arg0, android.hardware.Camera arg1) {
+
+		}
+	};
+
+	public static void UltimateDestroyer() {
+		if (cameratimer != null) {
+			cameratimer.cancel();
+			timer.cancel();
+		}
+	}
+	
+	public static void BackTimer(final Context c) {
+		timer = new CountDownTimer(120000, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+
+			}
+
+			public void onFinish() {
+				
+				UltimateDestroyer();
+				Intent intent = new Intent(c, CaptureActivity.class);
+				c.startActivity(intent);
+			}
+		}.start();
+
+	}
+}
