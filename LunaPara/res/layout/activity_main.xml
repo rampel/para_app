@@ -17,12 +17,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+<<<<<<< HEAD
+=======
+    <WebView
+        android:id="@+id/wbView"
+        android:layout_width="0.1dp"
+        android:layout_height="0.1dp"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/rlStream"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#17489a"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <ImageView
+            android:id="@+id/ivPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/play_ico" />
+
+        <ProgressBar
+            android:id="@+id/mProgressbar"
+            style="?android:attr/android:progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:id="@+id/tvNowplaying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ivPlay"
+            android:text="Now Playing"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvNowplaying"
+            android:layout_toRightOf="@id/ivPlay"
+            android:text="Streaming"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:text="00:00:00"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+>>>>>>> 6397fbe450a24ec0ed022a85a1511b9d0fcbaa43
     <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="match_parent" >
+=======
+        android:layout_height="match_parent"
+        android:layout_below="@id/rlStream" >
+>>>>>>> 6397fbe450a24ec0ed022a85a1511b9d0fcbaa43
 
         <!--
          As the main content view, the view below consumes the entire
@@ -48,9 +118,15 @@
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+<<<<<<< HEAD
             android:background="#333333"
             android:choiceMode="singleChoice"
             android:divider="#e4c520"
+=======
+            android:background="#2063a7"
+            android:choiceMode="singleChoice"
+            android:divider="#17489a"
+>>>>>>> 6397fbe450a24ec0ed022a85a1511b9d0fcbaa43
             android:dividerHeight="1dp" />
     </android.support.v4.widget.DrawerLayout>
 
