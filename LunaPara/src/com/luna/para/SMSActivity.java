@@ -1,17 +1,32 @@
 package com.luna.para;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.gsm.SmsManager;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.luna.base.GlobalVariable;
 
 public class SMSActivity {
-	public static void sendSMS(final Context ctx, String phoneNumber,
-			String message) {
+
+	public static Dialog dialog;
+	public static final int START = 0;
+	public static final int STOP = 1;
+
+	public static void sendSMS(final Context ctx, int parameter,
+			final String message) {
+		Log.i("TAG", "DEBUG TEST");
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
 
@@ -27,21 +42,26 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Toast.makeText(ctx, "SMS sent", Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(ctx, GetOffActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_NEW_TASK);
+					ctx.startActivity(intent);
 					break;
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-					Toast.makeText(ctx, "Generic failure", Toast.LENGTH_SHORT)
-							.show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
-					Toast.makeText(ctx, "No service", Toast.LENGTH_SHORT)
-							.show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_NULL_PDU:
-					Toast.makeText(ctx, "Null PDU", Toast.LENGTH_SHORT).show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_RADIO_OFF:
-					Toast.makeText(ctx, "Radio off", Toast.LENGTH_SHORT).show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				}
 			}
@@ -53,18 +73,67 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Toast.makeText(ctx, "SMS delivered", Toast.LENGTH_SHORT)
-							.show();
+					Intent intent = new Intent(ctx, GetOffActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_NEW_TASK);
+					ctx.startActivity(intent);
 					break;
 				case Activity.RESULT_CANCELED:
-					Toast.makeText(ctx, "SMS not delivered", Toast.LENGTH_SHORT)
-							.show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				}
 			}
 		}, new IntentFilter(DELIVERED));
 
 		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		sms.sendTextMessage(GlobalVariable.getNumber(), null, message, sentPI,
+				deliveredPI);
+	}
+
+	public static void showDialogBox(final Context ctx, final String prompt,
+			final String pN, final String mesage) {
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
+		}
+		dialog = new Dialog(ctx);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.dialog_prompt);
+
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+		Window window = dialog.getWindow();
+		lp.copyFrom(window.getAttributes());
+		// This makes the dialog take up the full width
+		lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+		lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		window.setAttributes(lp);
+
+		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
+		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
+		TextView tvPrompt = (TextView) dialog.findViewById(R.id.tvPrompt);
+		tvPrompt.setText(prompt);
+
+		btnYes.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				sendSMS(ctx, 0, mesage);
+
+			}
+		});
+		btnNo.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ctx, MainActivity.class);
+				ctx.startActivity(intent);
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+		dialog.setCancelable(false);
 	}
 }
