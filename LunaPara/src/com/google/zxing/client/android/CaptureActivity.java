@@ -408,6 +408,8 @@ public final class CaptureActivity extends Activity implements
 	}
 
 	private String getAverageTaxiRating() {
+		
+		
 		return "";
 	}
 
