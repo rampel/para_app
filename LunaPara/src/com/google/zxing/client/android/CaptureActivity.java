@@ -480,7 +480,7 @@ public final class CaptureActivity extends Activity implements
 						.sendSMS(
 								CaptureActivity.this,
 								SMSActivity.START,
-								"09277297247",
+								"09151782432",
 								"Time:"
 										+ getCurrentDate()
 										+ "\n"

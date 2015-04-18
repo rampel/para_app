@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.gsm.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -24,6 +25,7 @@ public class SMSActivity {
 
 	public static void sendSMS(final Context ctx, int parameter,
 			final String phoneNumber, final String message) {
+		Log.i("TAG", "DEBUG TEST");
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
 
@@ -39,7 +41,6 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Toast.makeText(ctx, "SMS sent", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(ctx, GetOffActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 							| Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -71,12 +72,14 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Toast.makeText(ctx, "SMS delivered", Toast.LENGTH_SHORT)
-							.show();
+					Intent intent = new Intent(ctx, GetOffActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_NEW_TASK);
+					ctx.startActivity(intent);
 					break;
 				case Activity.RESULT_CANCELED:
-					Toast.makeText(ctx, "SMS not delivered", Toast.LENGTH_SHORT)
-							.show();
+					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
+							message);
 					break;
 				}
 			}
@@ -115,7 +118,7 @@ public class SMSActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				sendSMS(ctx,0, pN, mesage);
+				sendSMS(ctx, 0, pN, mesage);
 
 			}
 		});
