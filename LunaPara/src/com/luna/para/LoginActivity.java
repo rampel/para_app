@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.luna.adapter.BaseActivity;
+import com.luna.adapter.NetworkManager;
 import com.luna.base.Prefs;
 import com.luna.entity.User;
 import com.parse.FindCallback;
@@ -34,57 +35,64 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (!etUserName.getText().toString().trim().isEmpty()
-						&& !etPassword.getText().toString().trim().isEmpty()) {
-					ParseQuery<ParseObject> query = ParseQuery
-							.getQuery("Account");
-					query.whereEqualTo("email", etUserName.getText().toString());
-					query.whereEqualTo("password", etPassword.getText()
-							.toString());
-					showZapLoadingProgressDialog(ctx, "Loading...");
-					query.findInBackground(new FindCallback<ParseObject>() {
+				if (NetworkManager.isNetworkOnline(ctx)) {
+					if (!etUserName.getText().toString().trim().isEmpty()
+							&& !etPassword.getText().toString().trim()
+									.isEmpty()) {
+						ParseQuery<ParseObject> query = ParseQuery
+								.getQuery("Account");
+						query.whereEqualTo("email", etUserName.getText()
+								.toString());
+						query.whereEqualTo("password", etPassword.getText()
+								.toString());
+						showZapLoadingProgressDialog(ctx, "Loading...");
+						query.findInBackground(new FindCallback<ParseObject>() {
 
-						@Override
-						public void done(List<ParseObject> object,
-								ParseException arg1) {
-							dismissZapProgressDialog();
-							if (arg1 == null) {
-								if (object.size() == 0) {
-									toast("Invalid Account");
+							@Override
+							public void done(List<ParseObject> object,
+									ParseException arg1) {
+								dismissZapProgressDialog();
+								if (arg1 == null) {
+									if (object.size() == 0) {
+										toast("Invalid Account");
+									} else {
+										ParseObject userObject = object.get(0);
+										User user = new User();
+										user.setContactName(userObject
+												.getString("contactName"));
+										user.setContactNumber(userObject
+												.getString("contactNumber"));
+										user.setContactRelationship(userObject
+												.getString("relationship"));
+										user.setEmailString(etUserName
+												.getText().toString().trim());
+										user.setName(userObject
+												.getString("name"));
+										user.setPassword(userObject
+												.getString("password"));
+										user.setId_type(userObject
+												.getString("type"));
+										user.setId_name(userObject
+												.getString("id_number"));
+										User.setUser(ctx, user);
+										Intent intent = new Intent(ctx,
+												MainActivity.class);
+										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+												| Intent.FLAG_ACTIVITY_CLEAR_TASK
+												| Intent.FLAG_ACTIVITY_NEW_TASK);
+										startActivity(intent);
+
+									}
 								} else {
-									ParseObject userObject = object.get(0);
-									User user = new User();
-									user.setContactName(userObject
-											.getString("contactName"));
-									user.setContactNumber(userObject
-											.getString("contactNumber"));
-									user.setContactRelationship(userObject
-											.getString("relationship"));
-									user.setEmailString(etUserName.getText()
-											.toString().trim());
-									user.setName(userObject.getString("name"));
-									user.setPassword(userObject
-											.getString("password"));
-									user.setId_type(userObject
-											.getString("type"));
-									user.setId_name(userObject
-											.getString("id_number"));
-									User.setUser(ctx, user);
-									Intent intent = new Intent(ctx,
-											MainActivity.class);
-									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-											| Intent.FLAG_ACTIVITY_CLEAR_TASK
-											| Intent.FLAG_ACTIVITY_NEW_TASK);
-									startActivity(intent);
-
+									toast("Invalid Account");
 								}
-							} else {
-								toast("Invalid Account");
 							}
-						}
-					});
+						});
+					} else {
+						toastLong("Please fill up all fields.");
+					}
 				} else {
-					toastLong("Please fill up all fields.");
+					toast("No Internet connection. Please try again later.");
 				}
 
 			}

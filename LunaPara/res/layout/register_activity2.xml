@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_bg"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="10dp" >
+    android:background="@drawable/main_bg" >
 
-    <Spinner
-        android:id="@+id/spType"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/edit_text_bg" />
+        android:layout_height="match_parent"
+        android:background="@drawable/main_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp" >
 
-    <EditText
-        android:id="@+id/etIdentification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="#fff"
-        android:textCursorDrawable="@drawable/cursor_color" 
-        android:hint="ID NUMBER"/>
+        <Spinner
+            android:id="@+id/spType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_bg" />
 
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/reverse_yellow_black"
-        android:text="NEXT" />
+        <EditText
+            android:id="@+id/etIdentification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:hint="ID NUMBER"
+            android:textColor="#fff"
+            android:textCursorDrawable="@drawable/cursor_color" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reverse_yellow_black"
+            android:text="NEXT" />
+    </LinearLayout>
+
+</ScrollView>
