@@ -1,0 +1,57 @@
+package com.google.zxing.client.android;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.MediaController;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+public class ScreenSaver {
+
+	public static void screensaver(final Context c, FrameLayout act,
+			final Typeface tf) {
+
+		String validator = "";
+		validator = Configuration.GuestValidation("guest");
+		if (validator.contains("ok")) {
+
+			LayoutInflater inflater = (LayoutInflater) c
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View menuLayout = inflater.inflate(R.layout.webview, act, true);
+			VideoView mVideoView = (VideoView) menuLayout
+					.findViewById(R.id.videoView1);
+			// String videourl =
+			// "rtsp://v7.cache4.c.youtube.com/CiILENy73wIaGQl25yDUbxNXTRMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp";
+			MediaController mc = new MediaController(c);
+			mVideoView.setMediaController(mc);
+			mVideoView.requestFocus();
+			mVideoView.setVideoPath(Environment.getExternalStorageDirectory()
+					+ "/54622/corporate_video.mp4");
+
+			mc.show();
+			mVideoView.setOnPreparedListener(new OnPreparedListener() {
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					mp.setLooping(true);
+				}
+			});
+			mVideoView.start();
+		} else {
+			LayoutInflater inflater = (LayoutInflater) c
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View menuLayout = inflater.inflate(R.layout.guestvalidation, act,
+					true);
+			TextView tv = (TextView) menuLayout.findViewById(R.id.textView1);
+			tv.setText("" + Configuration.GuestValidation("guest"));
+			tv.setTypeface(tf);
+		}
+
+	}
+
+}

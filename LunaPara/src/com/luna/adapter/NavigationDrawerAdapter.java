@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,9 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.luna.adapter.ShowAdapter.ViewHolder;
 import com.luna.base.Prefs;
-import com.luna.entity.Show;
 import com.luna.para.MainActivity;
 import com.luna.para.R;
 
@@ -65,25 +61,14 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 		holder.tvTitle.setText(list[position]);
 		switch (position) {
 		case 0:
-			if (!Prefs.getMyStringPrefs(ctx, Prefs.USER_NAME).equals("")) {
-				holder.tvTitle.setText(Prefs.getMyStringPrefs(ctx,
-						Prefs.USER_NAME));
-				if (!Prefs.getMyStringPrefs(ctx, Prefs.USER_AVATAR).equals("")) {
-					new LoadImage(ctx, position, holder).executeOnExecutor(
-							AsyncTask.THREAD_POOL_EXECUTOR, ((Void) null));
-				}
-			} else {
-				holder.tvTitle.setText("Please Login");
-				holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.appicon));
-			}
-
+			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
+					R.drawable.home_ico));
 			holder.llSeparator.setVisibility(View.GONE);
 			break;
 		case 1:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
 					R.drawable.home_ico));
-			holder.llSeparator.setVisibility(View.VISIBLE);
+			holder.llSeparator.setVisibility(View.GONE);
 			break;
 		case 2:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
@@ -92,35 +77,12 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 			break;
 		case 3:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.chat_ico));
+					R.drawable.about_ico));
 			holder.llSeparator.setVisibility(View.GONE);
 			break;
 		case 4:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.show_ico));
-			holder.llSeparator.setVisibility(View.GONE);
-			break;
-		case 5:
-			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.shape_1));
-			holder.llSeparator.setVisibility(View.VISIBLE);
-			break;
-		case 6:
-			if (!Prefs.getMyStringPrefs(ctx, Prefs.USER_ID).equals("")) {
-				holder.tvTitle.setText("Logout");
-				holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.logout_ico));
-			} else {
-				holder.tvTitle.setText("Login");
-				holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.login_ico));
-			}
-			
-			holder.llSeparator.setVisibility(View.GONE);
-			break;
-		case 7:
-			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.about_ico));
+					R.drawable.logout_ico));
 			holder.llSeparator.setVisibility(View.GONE);
 			break;
 		}
