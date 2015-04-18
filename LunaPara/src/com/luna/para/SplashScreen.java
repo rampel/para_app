@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import com.google.zxing.client.android.CaptureActivity;
 import com.luna.adapter.BaseActivity;
+import com.luna.base.Prefs;
 
 public class SplashScreen extends BaseActivity {
 
@@ -27,8 +28,13 @@ public class SplashScreen extends BaseActivity {
 
 			@Override
 			public void run() {
-				startActivity(new Intent(SplashScreen.this,
-						LaunchActivity.class));
+				if (!Prefs.getMyStringPrefs(ctx, Prefs.EMAIL_ADDRESS).isEmpty()) {
+					startActivity(new Intent(SplashScreen.this,
+							MainActivity.class));
+				} else {
+					startActivity(new Intent(SplashScreen.this,
+							LaunchActivity.class));
+				}
 			}
 		}, TIME_SPLASH);
 		super.onCreate(savedInstanceState);

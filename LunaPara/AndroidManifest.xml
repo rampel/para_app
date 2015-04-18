@@ -49,6 +49,7 @@
         <activity
             android:name="com.luna.para.SplashScreen"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -95,6 +96,7 @@
         <activity
             android:name="com.luna.para.LoginActivity"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -111,7 +113,6 @@
             android:name="com.luna.para.RegisterStep1Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
->>>>>>> 1f914aac2f0fe3cbef5f23c81dfa879b8c2f3ca5
         </activity>
     </application>
 
