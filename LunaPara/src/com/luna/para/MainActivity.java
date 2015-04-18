@@ -19,12 +19,16 @@ package com.luna.para;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.ContactsContract.Profile;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -43,7 +47,9 @@ import android.widget.TextView;
 
 import com.luna.adapter.BaseActivity;
 import com.luna.adapter.NavigationDrawerAdapter;
+import com.luna.base.Prefs;
 import com.luna.fragment.AboutFragment;
+import com.luna.fragment.ProfileFragment;
 
 public class MainActivity extends BaseActivity {
 	private DrawerLayout mDrawerLayout;
@@ -70,9 +76,10 @@ public class MainActivity extends BaseActivity {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
-
-		getActionBar().setBackgroundDrawable(
-				new ColorDrawable(Color.parseColor("#333333")));
+		BitmapDrawable background = new BitmapDrawable(
+				BitmapFactory
+						.decodeResource(getResources(), R.drawable.main_bg));
+		getActionBar().setBackgroundDrawable(background);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -109,9 +116,8 @@ public class MainActivity extends BaseActivity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
 		if (savedInstanceState == null) {
-			selectItem(1);
+			selectItem(0);
 		}
 	}
 
@@ -172,20 +178,41 @@ public class MainActivity extends BaseActivity {
 	}
 
 	public void selectItem(int position) {
-		Fragment fragment = new AboutFragment();
-		// update the main content by replacing fragments
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
-
-		// update selected item and title, then close the drawer
-		mDrawerList.setItemChecked(position, true);
-		setTitle(Html
-				.fromHtml("<font color=\"white\">"
-						+ ctx.getResources().getStringArray(R.array.menu_array)[position]
-						+ "</font>"));
-		mDrawerLayout.closeDrawer(mDrawerList);
-
+		if (position == 3) {
+			Prefs.removeAllPref(ctx);
+			Intent intent = new Intent(ctx, LaunchActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		} else if (position == 1) {
+			Fragment fragment = new ProfileFragment();
+			// update the main content by replacing fragments
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(Html
+					.fromHtml("<font color=\"white\">"
+							+ ctx.getResources().getStringArray(
+									R.array.menu_array)[position] + "</font>"));
+			mDrawerLayout.closeDrawer(mDrawerList);
+		} else if (position == 2) {
+		} else {
+			Fragment fragment = new AboutFragment();
+			// update the main content by replacing fragments
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(Html
+					.fromHtml("<font color=\"white\">"
+							+ ctx.getResources().getStringArray(
+									R.array.menu_array)[position] + "</font>"));
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
 	}
 
 	@Override

@@ -30,9 +30,11 @@ public class RegisterStep2Activity extends BaseActivity implements
 		btnNext = (Button) findViewById(R.id.btnNext);
 		btnNext.setOnClickListener(this);
 		spType = (Spinner) findViewById(R.id.spType);
-		spType.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, getResources()
-						.getStringArray(R.array.id_type)));
+		ArrayAdapter<String> dAdapter = new ArrayAdapter<String>(this,
+				R.layout.text_view_spinner, getResources().getStringArray(
+						R.array.id_type));
+		dAdapter.setDropDownViewResource(R.layout.text_view_dropdown_spinner);
+		spType.setAdapter(dAdapter);
 		super.onCreate(savedInstanceState);
 	}
 

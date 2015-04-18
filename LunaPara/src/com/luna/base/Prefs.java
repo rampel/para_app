@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 
 public class Prefs {
 
-	public static String CURRENT_SHOWID = "CURRENT_SHOWID";
-	public static String PLAYER_URL = "PLAYER_URL";
-	public static String AUTO_PLAY = "AUTO_PLAY";
-	public static String VOLUME = "VOLUME";
-	public static String LOGIN_PAGE = "LOGIN_PAGE";
-	public static String REGISTER_PAGE = "REGISTER_PAGE";
-	public static String ABOUT_PAGE = "ABOUT_PAGE";
-	public static String MYPOST_PAGE = "MYPOST_PAGE";
-	public static String CHAT_PAGE = "CHAT_PAGE";
-	public static String USER_ID = "USER_ID";
-	public static String USER_NAME = "USER_NAME";
-	public static String USER_AVATAR = "USER_AVATAR";
+	public static String EMAIL_ADDRESS = "EMAIL_ADDRESS";
+	public static String PASSWORD = "PASSWORD";
+	public static String NAME = "NAME";
+	public static String ID_TYPE = "ID_TYPE";
+	public static String ID_NAME = "ID_NAME";
+	public static String CONTACTNUMBER = "CONTACTNUMBER";
+	public static String CONTACTNAME = "CONTACTNAME";
+	public static String CONTACTRELATIONSHIP = "CONTACTRELATIONSHIP";
 
 	public static SharedPreferences getPrefs(Context context) {
 		return context.getSharedPreferences("myprefs", 0);
@@ -57,6 +53,10 @@ public class Prefs {
 
 	public static void removePref(Context context, String key) {
 		getPrefs(context).edit().remove(key);
+	}
+
+	public static void removeAllPref(Context context) {
+		getPrefs(context).edit().clear().commit();
 	}
 
 }
