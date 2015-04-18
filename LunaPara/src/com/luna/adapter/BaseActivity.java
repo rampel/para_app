@@ -15,12 +15,8 @@ import android.widget.Toast;
 
 public abstract class BaseActivity extends FragmentActivity {
 
-<<<<<<< HEAD
 	protected DecimalFormat twoDecimal = new DecimalFormat("0.00");
 	public Context ctx = this;
-=======
-		protected DecimalFormat twoDecimal = new DecimalFormat("0.00");
->>>>>>> 6397fbe450a24ec0ed022a85a1511b9d0fcbaa43
 
 	public static Dialog dialogOk;
 	private final String TAG = this.getClass().getSimpleName();
@@ -33,14 +29,6 @@ public abstract class BaseActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
-	public void onBackPressed() {
-		return;
-	}
-
->>>>>>> 6397fbe450a24ec0ed022a85a1511b9d0fcbaa43
 	/** Register for the updates when Activity is in foreground */
 	@Override
 	protected void onResume() {
