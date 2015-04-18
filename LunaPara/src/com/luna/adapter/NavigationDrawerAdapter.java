@@ -72,68 +72,19 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 			break;
 		case 2:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.dj_ico));
+					R.drawable.about_ico));
 			holder.llSeparator.setVisibility(View.GONE);
 			break;
 		case 3:
 			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
-					R.drawable.about_ico));
-			holder.llSeparator.setVisibility(View.GONE);
-			break;
-		case 4:
-			holder.ivIcon.setImageDrawable(ctx.getResources().getDrawable(
 					R.drawable.logout_ico));
 			holder.llSeparator.setVisibility(View.GONE);
 			break;
+		case 4:
+
+			break;
 		}
 		return convertView;
-	}
-
-	private class LoadImage extends AsyncTask<Void, Void, Void> {
-
-		private Context ctx;
-		private ViewHolder holder;
-		Bitmap bitmap;
-		int position;
-
-		public LoadImage(Context ctx, int position, ViewHolder holder) {
-			this.ctx = ctx;
-			this.holder = holder;
-			this.position = position;
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			bitmap = MainActivity.getBitmapFromMemCache(Prefs.getMyStringPrefs(
-					ctx, Prefs.USER_AVATAR));
-			if (bitmap == null) {
-				try {
-					URL url = new URL(Prefs.getMyStringPrefs(ctx,
-							Prefs.USER_AVATAR));
-					HttpURLConnection connection = (HttpURLConnection) url
-							.openConnection();
-					connection.setDoInput(true);
-					connection.connect();
-					InputStream input = connection.getInputStream();
-					bitmap = BitmapFactory.decodeStream(input);
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			if (bitmap != null && position == holder.position) {
-				MainActivity.addBitmapToMemoryCache(
-						Prefs.getMyStringPrefs(ctx, Prefs.USER_AVATAR), bitmap);
-				holder.ivIcon.setImageBitmap(bitmap);
-			}
-			super.onPostExecute(result);
-		}
-
 	}
 
 	class ViewHolder {
