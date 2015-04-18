@@ -4,14 +4,17 @@
     <string name="facebook_key">1431458773739499</string>
 
     <string-array name="menu_array">
-        <item>John Doe</item>
         <item>Home</item>
-        <item>DJ List</item>
-        <item>Chat</item>
-        <item>Show</item>
-        <item>Sign up</item>
-        <item>Login</item>
+        <item>Settings</item>
+        <item>Profile</item>
         <item>About</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="id_type">
+        <item>Drivers License</item>
+        <item>Voters Id</item>
+        <item>Tin Number</item>
+        <item>Social Security System (SSS)</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>

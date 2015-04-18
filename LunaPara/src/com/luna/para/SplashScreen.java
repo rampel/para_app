@@ -19,19 +19,18 @@ public class SplashScreen extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		setContentView(R.layout.splash_screen);
 		getActionBar().hide();
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
-				Intent intent = new Intent(SplashScreen.this,
-						CaptureActivity.class);
-				startActivity(intent);
+				startActivity(new Intent(SplashScreen.this,
+						LaunchActivity.class));
 			}
 		}, TIME_SPLASH);
-
 		super.onCreate(savedInstanceState);
 	}
 
