@@ -19,6 +19,8 @@ package com.google.zxing.client.android;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -52,9 +54,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -66,6 +68,7 @@ import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.luna.para.R;
+import com.luna.para.SMSActivity;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -385,18 +388,20 @@ public final class CaptureActivity extends Activity implements
 
 			String dataArray[] = text1.split("<~>");
 			Log.i("TAG", "DEBUG " + dataArray.length);
-			Toast.makeText(this, " " + text1, Toast.LENGTH_LONG).show();
 
 			if (dataArray.length == 9) {
+				showDialogBox(true,
+						"THIS TAXI IS REGISTERED! DO YOU WANT TO CONTINUE?");
 
 			} else {
-				showDialogBox("THIS TAXI IS NOT REGISTERED DO YOU WANT TO CONTINUE?");
+				showDialogBox(false,
+						"THIS TAXI IS NOT REGISTERED! DO YOU WANT TO CONTINUE?");
 			}
 		}
 
 	}
 
-	private void showDialogBox(String prompt) {
+	private void showDialogBox(final boolean isReg, String prompt) {
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_prompt);
@@ -420,16 +425,87 @@ public final class CaptureActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
+				if (isReg) {
+
+				} else {
+					showManualInputDialog();
+
+				}
+				dialog.dismiss();
 			}
 		});
 		btnNo.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				restartPreviewAfterDelay(0);
 				dialog.dismiss();
 			}
 		});
+		dialog.setCancelable(false);
 		dialog.show();
+	}
+
+	public String getCurrentDate() {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy");
+		return sdf.format(cal.getTime());
+	}
+
+	private void showManualInputDialog() {
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.dialog_manual_input);
+
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+		Window window = dialog.getWindow();
+		lp.copyFrom(window.getAttributes());
+		// This makes the dialog take up the full width
+		lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+		lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		window.setAttributes(lp);
+		final EditText etPlateNo = (EditText) dialog
+				.findViewById(R.id.etPlateNo);
+		final EditText etTaxiName = (EditText) dialog
+				.findViewById(R.id.etTaxiName);
+
+		Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
+		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+
+		btnConfirm.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				SMSActivity
+						.sendSMS(
+								CaptureActivity.this,
+								SMSActivity.START,
+								"09277297247",
+								"Time:"
+										+ getCurrentDate()
+										+ "\n"
+										+ "Plate No:"
+										+ etPlateNo.getText().toString()
+										+ "\n"
+										+ (etTaxiName.getText().length() > 0 ? "Taxi Name: "
+												+ etTaxiName.getText()
+														.toString()
+												: ""));
+				dialog.dismiss();
+
+			}
+		});
+		btnCancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				restartPreviewAfterDelay(0);
+				dialog.dismiss();
+			}
+		});
+		dialog.setCancelable(false);
+		dialog.show();
+
 	}
 
 	/**
