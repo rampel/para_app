@@ -1,0 +1,34 @@
+package com.google.zxing.client.android;
+
+import android.content.Context;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+public class GuestValidation {
+static TextView tv;
+	public static void guestvalidation(final Context c, FrameLayout act, final Typeface tf, final LinearLayout promp) {
+		LayoutInflater inflater = (LayoutInflater) c
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View menuLayout = inflater.inflate(R.layout.guestvalidation, act, true);
+		
+		String validator = "";
+		validator=Configuration.GuestValidation("guest");
+		if(validator.contains("ok")){
+			if (((FrameLayout) act).getChildCount() > 0)
+				((FrameLayout) act).removeAllViews();
+			Guest.guest(c, act, tf,promp);
+		}
+		else{
+		//	((ViewManager)promp.getParent()).removeView(promp);
+			promp.setVisibility(View.GONE);
+		tv =(TextView)menuLayout.findViewById(R.id.textView1);
+		tv.setText(""+Configuration.GuestValidation("guest"));
+		tv.setTypeface(tf);
+		}
+	}
+}

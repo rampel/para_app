@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.google.zxing.client.android.CaptureActivity;
 import com.luna.adapter.BaseActivity;
-import com.luna.para.R;
-import com.parse.Parse;
 
 public class SplashScreen extends BaseActivity {
 
