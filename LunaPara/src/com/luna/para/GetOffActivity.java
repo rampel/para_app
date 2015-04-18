@@ -2,6 +2,7 @@ package com.luna.para;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,12 +10,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.luna.adapter.BaseActivity;
+import com.luna.base.Prefs;
+import com.luna.entity.User;
+import com.parse.ParseObject;
 
 public class GetOffActivity extends BaseActivity {
 	private ImageView ivStop;
+	String[] dataArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,10 +31,35 @@ public class GetOffActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
+				String[] dataArray = Prefs.getMyStringPrefs(ctx,
+						Prefs.DATA_ARRAY_STATUS).split("<~>");
+				sendReportToPnp(dataArray);
 				showDialogBox("Did you get off safely?");
 			}
 		});
 		// TODO PREFERENCE THIS
+	}
+
+	private void sendReportToPnp(String[] dataArray) {
+		ParseObject object = new ParseObject("PNP_database");
+		object.put("vin_number", dataArray[0]);
+		object.put("vehicle_make", dataArray[1]);
+		object.put("vehicle_model", dataArray[2]);
+		object.put("vehicle_year", dataArray[3]);
+		object.put("plate_number", dataArray[4]);
+		object.put("driver_name", dataArray[5]);
+		object.put("taxi_name", dataArray[6]);
+		object.put("operator_contact_number", dataArray[7]);
+		object.put("operator_rating", dataArray[8]);
+		User user = User.getUser(this);
+		object.put("reporter_name", user.getName());
+		object.put("reporter_email", user.getEmailString());
+		object.put("reporter_identification", user.getId_name());
+		object.put("reporter_identification_type", user.getId_type());
+		object.put("status", "OUT");
+		object.put("latitude", "14.5412181");
+		object.put("longitude", "121.019488700000010000");
+		object.saveInBackground();
 	}
 
 	private void showDialogBox(String prompt) {
@@ -69,6 +100,13 @@ public class GetOffActivity extends BaseActivity {
 		dialog.show();
 	}
 
+	private void sendTaxiRating(String rating) {
+		ParseObject object = new ParseObject("Taxi_Rating");
+		object.put("taxi_plate_number", dataArray[4]);
+		object.put("rating", rating);
+		object.saveInBackground();
+	}
+
 	private void showRating() {
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -84,11 +122,14 @@ public class GetOffActivity extends BaseActivity {
 
 		Button btnRate = (Button) dialog.findViewById(R.id.btnRate);
 		Button btnSkip = (Button) dialog.findViewById(R.id.btnSkip);
+		final RatingBar ratingBar = (RatingBar) dialog
+				.findViewById(R.id.ratingBar);
 
 		btnRate.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				sendTaxiRating(ratingBar.getRating() + "");
 				Intent intent = new Intent(GetOffActivity.this,
 						MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP

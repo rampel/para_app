@@ -13,6 +13,7 @@ public class Prefs {
 	public static String CONTACTNUMBER = "CONTACTNUMBER";
 	public static String CONTACTNAME = "CONTACTNAME";
 	public static String CONTACTRELATIONSHIP = "CONTACTRELATIONSHIP";
+	public static String DATA_ARRAY_STATUS = "DATA_ARRAY_STATUS";
 
 	public static SharedPreferences getPrefs(Context context) {
 		return context.getSharedPreferences("myprefs", 0);
