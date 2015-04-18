@@ -68,8 +68,11 @@ import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.luna.base.GlobalVariable;
+import com.luna.base.Prefs;
+import com.luna.entity.User;
 import com.luna.para.R;
 import com.luna.para.SMSActivity;
+import com.parse.ParseObject;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -116,6 +119,7 @@ public final class CaptureActivity extends Activity implements
 	private InactivityTimer inactivityTimer;
 	private BeepManager beepManager;
 	private AmbientLightManager ambientLightManager;
+	public String[] dataArray;
 
 	ViewfinderView getViewfinderView() {
 		return viewfinderView;
@@ -387,7 +391,8 @@ public final class CaptureActivity extends Activity implements
 				e.printStackTrace();
 			}
 
-			String dataArray[] = text1.split("<~>");
+			dataArray = text1.split("<~>");
+			Prefs.setMyStringPref(this, Prefs.DATA_ARRAY_STATUS, text1);
 
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
@@ -400,6 +405,10 @@ public final class CaptureActivity extends Activity implements
 			}
 		}
 
+	}
+
+	private String getAverageTaxiRating() {
+		return "";
 	}
 
 	private void showDialogBox(final boolean isReg, String prompt) {
@@ -424,10 +433,21 @@ public final class CaptureActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
 				if (isReg) {
-
+					sendReportToPnp();
+					SMSActivity.sendSMS(
+							CaptureActivity.this,
+							SMSActivity.START,
+							GlobalVariable.getHeader()
+									+ "Time:"
+									+ getCurrentDate()
+									+ "\n\n"
+									+ "Plate No:"
+									+ dataArray[4]
+									+ "\n\n"
+									+ (dataArray[6].length() > 0 ? "Taxi Name: "
+											+ dataArray[6]
+											: ""));
 				} else {
 					showManualInputDialog();
 
@@ -445,6 +465,28 @@ public final class CaptureActivity extends Activity implements
 		});
 		dialog.setCancelable(false);
 		dialog.show();
+	}
+
+	private void sendReportToPnp() {
+		ParseObject object = new ParseObject("PNP_database");
+		object.put("vin_number", dataArray[0]);
+		object.put("vehicle_make", dataArray[1]);
+		object.put("vehicle_model", dataArray[2]);
+		object.put("vehicle_year", dataArray[3]);
+		object.put("plate_number", dataArray[4]);
+		object.put("driver_name", dataArray[5]);
+		object.put("taxi_name", dataArray[6]);
+		object.put("operator_contact_number", dataArray[7]);
+		object.put("operator_rating", dataArray[8]);
+		User user = User.getUser(this);
+		object.put("reporter_name", user.getName());
+		object.put("reporter_email", user.getEmailString());
+		object.put("reporter_identification", user.getId_name());
+		object.put("reporter_identification_type", user.getId_type());
+		object.put("status", "IN");
+		object.put("latitude", "14.5412181");
+		object.put("longitude", "121.019488700000010000");
+		object.saveInBackground();
 	}
 
 	public String getCurrentDate() {

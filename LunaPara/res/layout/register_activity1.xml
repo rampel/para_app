@@ -12,6 +12,11 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </RelativeLayout>
+
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
@@ -49,6 +54,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/reverse_yellow_black"
             android:text="NEXT" />
+
     </LinearLayout>
 
 </ScrollView>
