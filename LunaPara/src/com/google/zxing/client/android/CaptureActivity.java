@@ -481,7 +481,7 @@ public final class CaptureActivity extends Activity implements
 						.sendSMS(
 								CaptureActivity.this,
 								SMSActivity.START,
-								GlobalVariable.getHeader()
+								GlobalVariable.getHeader(CaptureActivity.this)
 										+ "Time:"
 										+ getCurrentDate()
 										+ "\n\n"

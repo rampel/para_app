@@ -19,6 +19,7 @@ import com.google.zxing.client.android.CaptureActivity;
 import com.luna.base.Prefs;
 import com.luna.para.MainActivity;
 import com.luna.para.R;
+import com.luna.para.ReportActivity;
 
 public class AboutFragment extends Fragment implements OnClickListener {
 
@@ -59,7 +60,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			break;
 
 		case R.id.btnReportAnIncident:
-
+			intent = new Intent(ctx, ReportActivity.class);
+			startActivity(intent);
 			break;
 
 		default:
