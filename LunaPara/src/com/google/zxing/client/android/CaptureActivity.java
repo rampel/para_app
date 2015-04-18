@@ -390,12 +390,6 @@ public final class CaptureActivity extends Activity implements
 			if (dataArray.length == 9) {
 
 			} else {
-				/*
-				 * CustomDialog cd1 = new CustomDialog(CaptureActivity.this,
-				 * CustomDialog.SINGLE_CONFIRMATION,
-				 * "THIS TAXI IS NOT REGISTERED");
-				 */
-
 				showDialogBox("THIS TAXI IS NOT REGISTERED DO YOU WANT TO CONTINUE?");
 			}
 		}
@@ -406,15 +400,15 @@ public final class CaptureActivity extends Activity implements
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_prompt);
-		
+
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 		Window window = dialog.getWindow();
 		lp.copyFrom(window.getAttributes());
-		//This makes the dialog take up the full width
+		// This makes the dialog take up the full width
 		lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 		lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		window.setAttributes(lp);
-		
+
 		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
 		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
 		TextView tvPrompt = (TextView) dialog.findViewById(R.id.tvPrompt);
