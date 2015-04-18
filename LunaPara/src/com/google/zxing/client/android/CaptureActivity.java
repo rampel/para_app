@@ -388,6 +388,8 @@ public final class CaptureActivity extends Activity implements
 			}
 
 			String dataArray[] = text1.split("<~>");
+			
+			
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
 			if (dataArray.length == 9) {
