@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 public abstract class BaseActivity extends FragmentActivity {
 
-	protected DecimalFormat twoDecimal = new DecimalFormat("0.00");
+		protected DecimalFormat twoDecimal = new DecimalFormat("0.00");
 
 	public static Dialog dialogOk;
 	private final String TAG = this.getClass().getSimpleName();
