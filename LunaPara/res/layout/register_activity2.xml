@@ -2,23 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@drawable/main_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <Spinner
         android:id="@+id/spType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edit_text_bg" />
 
     <EditText
         android:id="@+id/etIdentification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ID NUMBER" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#fff"
+        android:textCursorDrawable="@drawable/cursor_color" 
+        android:hint="ID NUMBER"/>
 
     <Button
         android:id="@+id/btnNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/reverse_yellow_black"
         android:text="NEXT" />
 
 </LinearLayout>

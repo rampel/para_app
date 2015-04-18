@@ -22,7 +22,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -74,9 +76,10 @@ public class MainActivity extends BaseActivity {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
-
-		getActionBar().setBackgroundDrawable(
-				new ColorDrawable(Color.parseColor("#333333")));
+		BitmapDrawable background = new BitmapDrawable(
+				BitmapFactory
+						.decodeResource(getResources(), R.drawable.main_bg));
+		getActionBar().setBackgroundDrawable(background);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 

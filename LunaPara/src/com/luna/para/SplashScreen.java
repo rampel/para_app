@@ -10,7 +10,7 @@ import com.luna.base.Prefs;
 
 public class SplashScreen extends BaseActivity {
 
-	private final int TIME_SPLASH = 2000;
+	private final int TIME_SPLASH = 3000;
 
 	@Override
 	protected void updateAction() {

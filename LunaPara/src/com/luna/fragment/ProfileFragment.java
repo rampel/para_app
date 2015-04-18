@@ -69,9 +69,13 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		etContactNumber.setText(user.getContactNumber());
 		etContactRelationship.setText(user.getContactRelationship());
 		btnUpdateButton = (Button) rootView.findViewById(R.id.btnUpdate);
-		spIdType.setAdapter(new ArrayAdapter<String>(ctx,
-				android.R.layout.simple_list_item_1, getResources()
-						.getStringArray(R.array.id_type)));
+
+		ArrayAdapter<String> dAdapter = new ArrayAdapter<String>(ctx,
+				R.layout.text_view_spinner, getResources().getStringArray(
+						R.array.id_type));
+		dAdapter.setDropDownViewResource(R.layout.text_view_dropdown_spinner);
+		spIdType.setAdapter(dAdapter);
+
 		for (int i = 0; i < getResources().getStringArray(R.array.id_type).length; i++) {
 			if (getResources().getStringArray(R.array.id_type)[i].equals(user
 					.getId_type())) {
