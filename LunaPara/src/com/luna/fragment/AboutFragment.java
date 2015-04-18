@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.google.zxing.client.android.CaptureActivity;
@@ -21,8 +22,8 @@ import com.luna.para.R;
 
 public class AboutFragment extends Fragment implements OnClickListener {
 
-	private Button btnRideATaxi;
-	private Button btnReportAnIncident;
+	private ImageView btnRideATaxi;
+	private ImageView btnReportAnIncident;
 	private Context ctx;
 
 	@Override
@@ -40,11 +41,12 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		init(rootView);
 		return rootView;
 	}
-	
-	private void init(View rootView){
-		btnRideATaxi = (Button)rootView.findViewById(R.id.btnRideATaxi);
+
+	private void init(View rootView) {
+		btnRideATaxi = (ImageView) rootView.findViewById(R.id.btnRideATaxi);
 		btnRideATaxi.setOnClickListener(this);
-		btnReportAnIncident = (Button)rootView.findViewById(R.id.btnReportAnIncident);
+		btnReportAnIncident = (ImageView) rootView
+				.findViewById(R.id.btnReportAnIncident);
 		btnReportAnIncident.setOnClickListener(this);
 	}
 
