@@ -67,6 +67,7 @@ import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
+import com.luna.base.GlobalVariable;
 import com.luna.para.R;
 import com.luna.para.SMSActivity;
 
@@ -390,8 +391,7 @@ public final class CaptureActivity extends Activity implements
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
 			if (dataArray.length == 9) {
-				showDialogBox(true,
-						"THIS TAXI IS REGISTERED! DO YOU WANT TO CONTINUE?");
+				showDialogBox(true, "PROCEED?");
 
 			} else {
 				showDialogBox(false,
@@ -448,7 +448,7 @@ public final class CaptureActivity extends Activity implements
 
 	public String getCurrentDate() {
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy HH:ss:mm");
 		return sdf.format(cal.getTime());
 	}
 
@@ -480,13 +480,13 @@ public final class CaptureActivity extends Activity implements
 						.sendSMS(
 								CaptureActivity.this,
 								SMSActivity.START,
-								"09151782432",
-								"Time:"
+								GlobalVariable.getHeader()
+										+ "Time:"
 										+ getCurrentDate()
-										+ "\n"
+										+ "\n\n"
 										+ "Plate No:"
 										+ etPlateNo.getText().toString()
-										+ "\n"
+										+ "\n\n"
 										+ (etTaxiName.getText().length() > 0 ? "Taxi Name: "
 												+ etTaxiName.getText()
 														.toString()

@@ -136,7 +136,7 @@ public final class R {
         public static final int help_contents=0x7f09003c;
         public static final int history_detail=0x7f090040;
         public static final int history_title=0x7f09003f;
-        public static final int imageView1=0x7f090027;
+        public static final int imageView1=0x7f090028;
         public static final int image_view=0x7f09003b;
         public static final int ivAuthorImage=0x7f090056;
         public static final int ivFriday=0x7f090074;
@@ -178,7 +178,7 @@ public final class R {
         public static final int query_button=0x7f090061;
         public static final int query_text_view=0x7f090060;
         public static final int quit=0x7f090004;
-        public static final int ratingBar=0x7f090028;
+        public static final int ratingBar=0x7f090027;
         public static final int restart_preview=0x7f090005;
         public static final int result_button_view=0x7f09001a;
         public static final int result_list_view=0x7f090062;

@@ -15,7 +15,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.luna.base.GlobalVariable;
 
 public class SMSActivity {
 
@@ -24,7 +25,7 @@ public class SMSActivity {
 	public static final int STOP = 1;
 
 	public static void sendSMS(final Context ctx, int parameter,
-			final String phoneNumber, final String message) {
+			final String message) {
 		Log.i("TAG", "DEBUG TEST");
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
@@ -47,20 +48,20 @@ public class SMSActivity {
 					ctx.startActivity(intent);
 					break;
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
-							message);
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
-					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
-							message);
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_NULL_PDU:
-					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
-							message);
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				case SmsManager.RESULT_ERROR_RADIO_OFF:
-					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
-							message);
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				}
 			}
@@ -78,15 +79,16 @@ public class SMSActivity {
 					ctx.startActivity(intent);
 					break;
 				case Activity.RESULT_CANCELED:
-					showDialogBox(ctx, "SENDING FAILED! RETRY?", phoneNumber,
-							message);
+					showDialogBox(ctx, "SENDING FAILED! RETRY?",
+							GlobalVariable.getNumber(), message);
 					break;
 				}
 			}
 		}, new IntentFilter(DELIVERED));
 
 		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		sms.sendTextMessage(GlobalVariable.getNumber(), null, message, sentPI,
+				deliveredPI);
 	}
 
 	public static void showDialogBox(final Context ctx, final String prompt,
@@ -118,7 +120,7 @@ public class SMSActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				sendSMS(ctx, 0, pN, mesage);
+				sendSMS(ctx, 0, mesage);
 
 			}
 		});

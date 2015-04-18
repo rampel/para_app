@@ -18,7 +18,7 @@
         android:id="@+id/etTaxiName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:ems="10"
         android:hint="TAXI NAME: (OPTIONAL)"
         android:inputType="textPersonName" >
@@ -30,6 +30,7 @@
         android:layout_gravity="center"
         android:background="#3E80B4"
         android:orientation="horizontal"
+        android:paddingBottom="10dp"
         android:weightSum="2" >
 
         <Button
