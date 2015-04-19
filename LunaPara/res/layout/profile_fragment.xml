@@ -11,6 +11,15 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Credentials"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e4c520" />
+
         <EditText
             android:id="@+id/etEmailAddress"
             android:layout_width="match_parent"
@@ -42,6 +51,22 @@
             android:textColor="#fff"
             android:textCursorDrawable="@drawable/cursor_color" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Identification card"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e4c520" />
+
+        <Spinner
+            android:id="@+id/spType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_bg" />
+
         <EditText
             android:id="@+id/etIdNumber"
             android:layout_width="match_parent"
@@ -52,12 +77,14 @@
             android:textColor="#fff"
             android:textCursorDrawable="@drawable/cursor_color" />
 
-        <Spinner
-            android:id="@+id/spType"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_bg" />
+            android:layout_marginTop="10dp"
+            android:text="Contact Person"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e4c520" />
 
         <EditText
             android:id="@+id/etContactName"
@@ -76,6 +103,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/edit_text_bg"
             android:hint="Contact Number"
+            android:inputType="number"
             android:textColor="#fff"
             android:textCursorDrawable="@drawable/cursor_color" />
 

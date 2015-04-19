@@ -1,9 +1,13 @@
 package com.luna.para;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.media.Rating;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -26,11 +30,16 @@ public class GetOffActivity extends BaseActivity {
 	TextView tvPlateNumber;
 	TextView tvMakeTextView;
 	TextView tvModelTextView;
+	TextView tvTaxiName;
+	Button btnReport;
+	User mUser;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_get_off);
 		super.onCreate(savedInstanceState);
+		btnReport = (Button) findViewById(R.id.btnReportAbuse);
+		tvTaxiName = (TextView) findViewById(R.id.tvTaxiName);
 		tvDriverName = (TextView) findViewById(R.id.tvDriverName);
 		tvMakeTextView = (TextView) findViewById(R.id.tvModelMake);
 		tvPlateNumber = (TextView) findViewById(R.id.tvPlateNumber);
@@ -40,20 +49,69 @@ public class GetOffActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				dataArray = Prefs
-						.getMyStringPrefs(ctx, Prefs.DATA_ARRAY_STATUS).split(
-								"<~>");
-				sendReportToPnp(dataArray);
+				try {
+					dataArray = Prefs.getMyStringPrefs(ctx,
+							Prefs.DATA_ARRAY_STATUS).split("<~>");
+					sendReportToPnp(dataArray);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				showDialogBox("Did you get off safely?");
 			}
 		});
-		dataArray = Prefs.getMyStringPrefs(ctx, Prefs.DATA_ARRAY_STATUS).split(
-				"<~>");
-		tvDriverName.setText("Driver Name: " + dataArray[5]);
-		tvMakeTextView.setText("Make: " + dataArray[1]);
-		tvPlateNumber.setText("Plate Number: " + dataArray[4]);
-		tvModelTextView.setText("Model: " + dataArray[2]);
+		try {
+			dataArray = Prefs.getMyStringPrefs(ctx, Prefs.DATA_ARRAY_STATUS)
+					.split("<~>");
+			tvDriverName.setText("Driver Name: " + dataArray[5]);
+			tvMakeTextView.setText("Make: " + dataArray[1]);
+			tvPlateNumber.setText("Plate Number: " + dataArray[4]);
+			tvModelTextView.setText("Model: " + dataArray[2]);
+			tvTaxiName.setText("Taxi Name: " + dataArray[6]);
+
+			mUser = User.getUser(ctx);
+
+			btnReport.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					SMSActivity.sendSMS(
+							ctx,
+							9,
+							" PARA ALERT!!! \n\n Looks like "
+									+ mUser.getName()
+									+ " is in danger! "
+									+ "Time:"
+									+ getCurrentDate()
+									+ "\n\n"
+									+ "Plate No:"
+									+ dataArray[4]
+									+ "\n\n"
+									+ (dataArray[6].length() > 0 ? "Taxi Name: "
+											+ dataArray[6]
+											: ""));
+				}
+			});
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			btnReport.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					SMSActivity.sendSMS(ctx, 9,
+							" PARA ALERT!!! \n\n Looks like " + mUser.getName()
+									+ " is in danger! " + "Time:"
+									+ getCurrentDate());
+				}
+			});
+			e.printStackTrace();
+		}
 		// TODO PREFERENCE THIS
+	}
+
+	public String getCurrentDate() {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy HH:ss:mm");
+		return sdf.format(cal.getTime());
 	}
 
 	private void sendReportToPnp(String[] dataArray) {
@@ -146,12 +204,14 @@ public class GetOffActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				sendTaxiRating(ratingBar.getRating() + "");
+				Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, false);
 				Intent intent = new Intent(GetOffActivity.this,
 						MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK
 						| Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);
+
 				dialog.dismiss();
 			}
 		});
@@ -159,6 +219,7 @@ public class GetOffActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+				Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, false);
 				Intent intent = new Intent(GetOffActivity.this,
 						MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP

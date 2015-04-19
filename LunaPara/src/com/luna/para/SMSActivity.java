@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.luna.base.GlobalVariable;
+import com.luna.base.Prefs;
 
 public class SMSActivity {
 
@@ -24,7 +25,7 @@ public class SMSActivity {
 	public static final int START = 0;
 	public static final int STOP = 1;
 
-	public static void sendSMS(final Context ctx, int parameter,
+	public static void sendSMS(final Context ctx, final int parameter,
 			final String message) {
 		Log.i("TAG", "DEBUG TEST");
 		String SENT = "SMS_SENT";
@@ -42,10 +43,16 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Intent intent = new Intent(ctx, GetOffActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-							| Intent.FLAG_ACTIVITY_NEW_TASK);
-					ctx.startActivity(intent);
+					if (parameter == 9) {
+
+					} else {
+						Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, true);
+						Intent intent = new Intent(ctx, GetOffActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_CLEAR_TASK
+								| Intent.FLAG_ACTIVITY_NEW_TASK);
+						ctx.startActivity(intent);
+					}
 					break;
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
@@ -73,10 +80,16 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
-					Intent intent = new Intent(ctx, GetOffActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-							| Intent.FLAG_ACTIVITY_NEW_TASK);
-					ctx.startActivity(intent);
+					if (parameter == 9) {
+
+					} else {
+						Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, true);
+						Intent intent = new Intent(ctx, GetOffActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_CLEAR_TASK
+								| Intent.FLAG_ACTIVITY_NEW_TASK);
+						ctx.startActivity(intent);
+					}
 					break;
 				case Activity.RESULT_CANCELED:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",

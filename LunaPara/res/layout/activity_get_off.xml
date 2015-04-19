@@ -6,6 +6,22 @@
     android:gravity="center"
     android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/btnReportAbuse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/reverse_yellow_black"
+        android:text="Report Abuse" />
+
+    <TextView
+        android:id="@+id/tvTaxiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#fff"
+        android:textSize="17dp" />
+
     <TextView
         android:id="@+id/tvDriverName"
         android:layout_width="wrap_content"
