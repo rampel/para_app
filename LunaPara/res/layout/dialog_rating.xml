@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#3E80B4"
+    android:background="@drawable/main_bg"
     android:orientation="vertical" >
 
     <RatingBar
@@ -23,14 +23,18 @@
             android:id="@+id/btnSkip"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/reverse_yellow_black"
             android:text="Skip" />
 
         <Button
             android:id="@+id/btnRate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/reverse_yellow_black"
             android:text="Rate" />
     </LinearLayout>
 
@@ -49,9 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ratingBar"
         android:layout_centerHorizontal="true"
-        android:text="Large Text"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#e4c520" />
 
     <EditText
         android:id="@+id/etComments"
@@ -60,6 +65,7 @@
         android:layout_below="@+id/tvName"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
+        android:background="@drawable/edit_text_bg"
         android:ems="10"
         android:gravity="top"
         android:inputType="textMultiLine"

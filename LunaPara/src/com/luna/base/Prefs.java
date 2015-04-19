@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Prefs {
-
+	public static String ACTIVE = "ACTIVE";
 	public static String EMAIL_ADDRESS = "EMAIL_ADDRESS";
 	public static String PASSWORD = "PASSWORD";
 	public static String NAME = "NAME";

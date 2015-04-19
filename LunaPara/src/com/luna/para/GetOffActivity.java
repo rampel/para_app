@@ -130,12 +130,14 @@ public class GetOffActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				sendTaxiRating(ratingBar.getRating() + "");
+				Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, false);
 				Intent intent = new Intent(GetOffActivity.this,
 						MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK
 						| Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);
+
 				dialog.dismiss();
 			}
 		});
@@ -143,6 +145,7 @@ public class GetOffActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+				Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, false);
 				Intent intent = new Intent(GetOffActivity.this,
 						MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP

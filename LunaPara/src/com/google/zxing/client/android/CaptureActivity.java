@@ -56,6 +56,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
@@ -397,11 +398,10 @@ public final class CaptureActivity extends Activity implements
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
 			if (dataArray.length == 9) {
-				showDialogBox(true, "PROCEED?");
+				showDialogTaxi();
 
 			} else {
-				showDialogBox(false,
-						"THIS TAXI IS NOT REGISTERED! DO YOU WANT TO CONTINUE?");
+				showDialogBox("THIS TAXI IS NOT REGISTERED! DO YOU WANT TO CONTINUE?");
 			}
 		}
 
@@ -411,7 +411,7 @@ public final class CaptureActivity extends Activity implements
 		return "";
 	}
 
-	private void showDialogBox(final boolean isReg, String prompt) {
+	private void showDialogBox(String prompt) {
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_prompt);
@@ -433,25 +433,58 @@ public final class CaptureActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				if (isReg) {
-					sendReportToPnp();
-					SMSActivity.sendSMS(
-							CaptureActivity.this,
-							SMSActivity.START,
-							GlobalVariable.getHeader(CaptureActivity.this)
-									+ "Time:"
-									+ getCurrentDate()
-									+ "\n\n"
-									+ "Plate No:"
-									+ dataArray[4]
-									+ "\n\n"
-									+ (dataArray[6].length() > 0 ? "Taxi Name: "
-											+ dataArray[6]
-											: ""));
-				} else {
-					showManualInputDialog();
+				showManualInputDialog();
+				dialog.dismiss();
+			}
+		});
+		btnNo.setOnClickListener(new OnClickListener() {
 
-				}
+			@Override
+			public void onClick(View v) {
+				restartPreviewAfterDelay(0);
+				dialog.dismiss();
+			}
+		});
+		dialog.setCancelable(false);
+		dialog.show();
+	}
+
+	private void showDialogTaxi() {
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.dialog_confirm);
+
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+		Window window = dialog.getWindow();
+		lp.copyFrom(window.getAttributes());
+		// This makes the dialog take up the full width
+		lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+		lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		window.setAttributes(lp);
+
+		RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
+		ratingBar.setRating(Float.parseFloat(dataArray[8]));
+		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
+		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
+		TextView tvName = (TextView) dialog.findViewById(R.id.tvName);
+		tvName.setText("" + dataArray[6]);
+
+		btnYes.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				sendReportToPnp();
+				SMSActivity.sendSMS(CaptureActivity.this, SMSActivity.START,
+						GlobalVariable.getHeader(CaptureActivity.this)
+								+ "Time:"
+								+ getCurrentDate()
+								+ "\n\n"
+								+ "Plate No:"
+								+ dataArray[4]
+								+ "\n\n"
+								+ (dataArray[6].length() > 0 ? "Taxi Name: "
+										+ dataArray[6] : ""));
+
 				dialog.dismiss();
 			}
 		});

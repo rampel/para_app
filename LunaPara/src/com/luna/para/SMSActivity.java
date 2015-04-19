@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.luna.base.GlobalVariable;
+import com.luna.base.Prefs;
 
 public class SMSActivity {
 
@@ -42,6 +43,7 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
+					Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, true);
 					Intent intent = new Intent(ctx, GetOffActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 							| Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -73,10 +75,13 @@ public class SMSActivity {
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 				case Activity.RESULT_OK:
+					Prefs.setMyBooleanPref(ctx, Prefs.ACTIVE, true);
 					Intent intent = new Intent(ctx, GetOffActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_CLEAR_TASK
 							| Intent.FLAG_ACTIVITY_NEW_TASK);
 					ctx.startActivity(intent);
+
 					break;
 				case Activity.RESULT_CANCELED:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",

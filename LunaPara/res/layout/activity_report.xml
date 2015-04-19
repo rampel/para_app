@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@drawable/main_bg" >
 
     <RelativeLayout
         android:id="@+id/rlFooter"
@@ -20,13 +21,13 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="Police Report"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#e4c520" />
 
             <EditText
                 android:id="@+id/etDescription"
@@ -35,7 +36,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
+                android:background="@drawable/edit_text_bg"
                 android:gravity="top"
                 android:hint="Report an incident"
                 android:inputType="textCapSentences|textMultiLine"
@@ -56,13 +57,6 @@
                     android:layout_marginLeft="30dp"
                     android:src="@android:drawable/ic_menu_camera" />
 
-                <TextView
-                    android:id="@+id/tvTakePhotoCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0" />
-
                 <ImageView
                     android:id="@+id/ivTakeVideo"
                     android:layout_width="wrap_content"
@@ -70,13 +64,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:src="@android:drawable/presence_video_online" />
-
-                <TextView
-                    android:id="@+id/tvVideoCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0" />
 
                 <ImageView
                     android:id="@+id/ivGallery"
@@ -86,13 +73,6 @@
                     android:layout_marginLeft="10dp"
                     android:src="@android:drawable/ic_menu_gallery" />
 
-                <TextView
-                    android:id="@+id/tvGallery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0" />
-
                 <Button
                     android:id="@+id/btnSend"
                     style="?android:attr/buttonStyleSmall"
@@ -100,6 +80,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:background="@drawable/reverse_yellow_black"
                     android:text="Send" />
             </LinearLayout>
         </LinearLayout>
