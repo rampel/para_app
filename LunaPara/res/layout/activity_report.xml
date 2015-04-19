@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="30dp"
-                    android:src="@android:drawable/ic_menu_camera" />
+                    android:src="@drawable/camera_ico" />
 
                 <ImageView
                     android:id="@+id/ivTakeVideo"
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:src="@android:drawable/presence_video_online" />
+                    android:src="@drawable/video_ico" />
 
                 <ImageView
                     android:id="@+id/ivGallery"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:src="@android:drawable/ic_menu_gallery" />
+                    android:src="@drawable/gallery_ico" />
 
                 <Button
                     android:id="@+id/btnSend"
