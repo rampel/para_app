@@ -24,11 +24,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -72,7 +75,10 @@ import com.luna.base.Prefs;
 import com.luna.entity.User;
 import com.luna.para.R;
 import com.luna.para.SMSActivity;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -120,6 +126,7 @@ public final class CaptureActivity extends Activity implements
 	private BeepManager beepManager;
 	private AmbientLightManager ambientLightManager;
 	public String[] dataArray;
+	private int rating = 0;
 
 	ViewfinderView getViewfinderView() {
 		return viewfinderView;
@@ -397,8 +404,26 @@ public final class CaptureActivity extends Activity implements
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
 			if (dataArray.length == 9) {
-				showDialogBox(true, "PROCEED?");
+				showZapLoadingProgressDialog(this, "Loading rating");
+				ParseQuery<ParseObject> query = ParseQuery.getQuery("Account");
+				query.whereEqualTo("email", dataArray[4]);
+				query.findInBackground(new FindCallback<ParseObject>() {
 
+					@Override
+					public void done(List<ParseObject> list, ParseException arg1) {
+						dismissZapProgressDialog();
+						if (arg1 == null) {
+							if (list.size() != 0) {
+								for (ParseObject object : list) {
+									rating += Integer.valueOf(object
+											.getString("rating"));
+								}
+								rating = (int) rating / list.size();
+								showDialogBox(true, "PROCEED?");
+							}
+						}
+					}
+				});
 			} else {
 				showDialogBox(false,
 						"THIS TAXI IS NOT REGISTERED! DO YOU WANT TO CONTINUE?");
@@ -407,10 +432,33 @@ public final class CaptureActivity extends Activity implements
 
 	}
 
-	private String getAverageTaxiRating() {
-		
-		
-		return "";
+	protected ProgressDialog zapProgressDialog;
+
+	public void showZapLoadingProgressDialog(Context context, String message) {
+		Log.d(TAG, "showing loading progress dialog");
+		if (zapProgressDialog == null) {
+			zapProgressDialog = new ProgressDialog(context);
+			zapProgressDialog.setMessage(message);
+			zapProgressDialog.setCancelable(true);
+			zapProgressDialog.setCanceledOnTouchOutside(true);
+			zapProgressDialog.show();
+		} else {
+			zapProgressDialog.setMessage(message);
+			zapProgressDialog.setCancelable(true);
+			zapProgressDialog.setCanceledOnTouchOutside(true);
+			zapProgressDialog.show();
+		}
+	}
+
+	public void dismissZapProgressDialog() {
+		Log.d(TAG, "dismissing progress dialog");
+		if (zapProgressDialog != null) {
+			zapProgressDialog.dismiss();
+		}
+	}
+
+	private void getAverageTaxiRating() {
+
 	}
 
 	private void showDialogBox(final boolean isReg, String prompt) {

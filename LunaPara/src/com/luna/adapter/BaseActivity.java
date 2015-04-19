@@ -20,7 +20,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
 	public static Dialog dialogOk;
 	private final String TAG = this.getClass().getSimpleName();
-	protected ProgressDialog zapProgressDialog;
+
 
 	protected abstract void updateAction();
 
@@ -40,7 +40,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected void onPause() {
 		super.onPause();
 	}
-
+	protected ProgressDialog zapProgressDialog;
 	public void showZapLoadingProgressDialog(Context context, String message) {
 		Log.d(TAG, "showing loading progress dialog");
 		if (zapProgressDialog == null) {
