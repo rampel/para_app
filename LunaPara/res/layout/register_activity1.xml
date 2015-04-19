@@ -7,16 +7,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
         android:background="@drawable/main_bg"
-        android:gravity="center"
         android:orientation="vertical"
         android:padding="10dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/register_logo" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="SIGN UP"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#e4c520" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:text="Credentials"
+            android:textColor="#e4c520"
+            android:textSize="30sp" />
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_bg"
             android:hint="Name"
             android:textColor="#fff"
@@ -26,7 +55,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_bg"
             android:hint="Email"
             android:textColor="#fff"
@@ -36,7 +65,7 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="40dp"
             android:background="@drawable/edit_text_bg"
             android:hint="Password"
             android:inputType="textPassword"
@@ -49,6 +78,34 @@
             android:layout_height="wrap_content"
             android:background="@drawable/reverse_yellow_black"
             android:text="NEXT" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:paddingTop="10dp" >
+
+                <RadioButton
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:checked="true"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -49,19 +49,19 @@ public class SMSActivity {
 					break;
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
-							GlobalVariable.getNumber(), message);
+							GlobalVariable.getNumber(ctx), message);
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
-							GlobalVariable.getNumber(), message);
+							GlobalVariable.getNumber(ctx), message);
 					break;
 				case SmsManager.RESULT_ERROR_NULL_PDU:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
-							GlobalVariable.getNumber(), message);
+							GlobalVariable.getNumber(ctx), message);
 					break;
 				case SmsManager.RESULT_ERROR_RADIO_OFF:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
-							GlobalVariable.getNumber(), message);
+							GlobalVariable.getNumber(ctx), message);
 					break;
 				}
 			}
@@ -80,15 +80,15 @@ public class SMSActivity {
 					break;
 				case Activity.RESULT_CANCELED:
 					showDialogBox(ctx, "SENDING FAILED! RETRY?",
-							GlobalVariable.getNumber(), message);
+							GlobalVariable.getNumber(ctx), message);
 					break;
 				}
 			}
 		}, new IntentFilter(DELIVERED));
 
 		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(GlobalVariable.getNumber(), null, message, sentPI,
-				deliveredPI);
+		sms.sendTextMessage(GlobalVariable.getNumber(ctx), null, message,
+				sentPI, deliveredPI);
 	}
 
 	public static void showDialogBox(final Context ctx, final String prompt,

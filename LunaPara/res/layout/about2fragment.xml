@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/para_logo"
+        android:gravity="center"
+        android:text="Marzipan halvah ice cream jujubes jelly beans sweet roll gingerbread bonbon jelly-o. Chocolate bar biscuit jelly-o. Marshmallow marzipan marshmallow carrot cake. Brownie chocolate cake soufflé apple pie jelly-o cake pudding chocolate danish.
+Candy canes chocolate soufflé cake cake marshmallow. Icing danish cupcake. Chupa chups powder gummies pudding cake.
+Gingerbread cake candy canes icing sesame snaps muffin brownie. Topping gummies chocolate cake sweet roll candy jelly beans donut. Gummies chocolate bar cake donut. Toffee fruitcake dragée cake bonbon chupa chups chocolate cake donut tiramisu.
+Macaroon brownie ice cream pastry jelly bear claw oat cake. Sesame snaps pie macaroon powder lemon drops. Cake donut topping carrot cake oat cake danish.
+Chocolate sweet pastry lemon drops sweet roll candy cake bonbon chocolate. Croissant danish powder tootsie roll chupa chups cake chocolate cake. Tiramisu sweet roll chocolate bear claw."
+        android:textColor="#fff" />
+
+</LinearLayout>

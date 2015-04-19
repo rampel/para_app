@@ -91,7 +91,6 @@ import com.parse.ParseQuery;
  */
 public final class CaptureActivity extends Activity implements
 		SurfaceHolder.Callback {
-
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
 	private static final long DEFAULT_INTENT_RESULT_DURATION_MS = 1500L;
@@ -404,32 +403,12 @@ public final class CaptureActivity extends Activity implements
 			Log.i("TAG", "DEBUG " + dataArray.length);
 
 			if (dataArray.length == 9) {
-				showZapLoadingProgressDialog(this, "Loading rating");
-				ParseQuery<ParseObject> query = ParseQuery.getQuery("Account");
-				query.whereEqualTo("email", dataArray[4]);
-				query.findInBackground(new FindCallback<ParseObject>() {
-
-					@Override
-					public void done(List<ParseObject> list, ParseException arg1) {
-						dismissZapProgressDialog();
-						if (arg1 == null) {
-							if (list.size() != 0) {
-								for (ParseObject object : list) {
-									rating += Integer.valueOf(object
-											.getString("rating"));
-								}
-								rating = (int) rating / list.size();
-								showDialogBox(true, "PROCEED?");
-							}
-						}
-					}
-				});
+				showDialogBox(true, "PROCEED?");
 			} else {
 				showDialogBox(false,
 						"THIS TAXI IS NOT REGISTERED! DO YOU WANT TO CONTINUE?");
 			}
 		}
-
 	}
 
 	protected ProgressDialog zapProgressDialog;
@@ -488,7 +467,7 @@ public final class CaptureActivity extends Activity implements
 					SMSActivity.sendSMS(
 							CaptureActivity.this,
 							SMSActivity.START,
-							GlobalVariable.getHeader()
+							GlobalVariable.getHeader(CaptureActivity.this)
 									+ "Time:"
 									+ getCurrentDate()
 									+ "\n\n"
@@ -573,7 +552,7 @@ public final class CaptureActivity extends Activity implements
 						.sendSMS(
 								CaptureActivity.this,
 								SMSActivity.START,
-								GlobalVariable.getHeader()
+								GlobalVariable.getHeader(CaptureActivity.this)
 										+ "Time:"
 										+ getCurrentDate()
 										+ "\n\n"

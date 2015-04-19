@@ -22,21 +22,37 @@ public class GetOffActivity extends BaseActivity {
 	private ImageView ivStop;
 	String[] dataArray;
 
+	TextView tvDriverName;
+	TextView tvPlateNumber;
+	TextView tvMakeTextView;
+	TextView tvModelTextView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_get_off);
 		super.onCreate(savedInstanceState);
+		tvDriverName = (TextView) findViewById(R.id.tvDriverName);
+		tvMakeTextView = (TextView) findViewById(R.id.tvModelMake);
+		tvPlateNumber = (TextView) findViewById(R.id.tvPlateNumber);
+		tvModelTextView = (TextView) findViewById(R.id.tvModelName);
 		ivStop = (ImageView) findViewById(R.id.ivStop);
 		ivStop.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				String[] dataArray = Prefs.getMyStringPrefs(ctx,
-						Prefs.DATA_ARRAY_STATUS).split("<~>");
+				dataArray = Prefs
+						.getMyStringPrefs(ctx, Prefs.DATA_ARRAY_STATUS).split(
+								"<~>");
 				sendReportToPnp(dataArray);
 				showDialogBox("Did you get off safely?");
 			}
 		});
+		dataArray = Prefs.getMyStringPrefs(ctx, Prefs.DATA_ARRAY_STATUS).split(
+				"<~>");
+		tvDriverName.setText("Driver Name: " + dataArray[5]);
+		tvMakeTextView.setText("Make: " + dataArray[1]);
+		tvPlateNumber.setText("Plate Number: " + dataArray[4]);
+		tvModelTextView.setText("Model: " + dataArray[2]);
 		// TODO PREFERENCE THIS
 	}
 

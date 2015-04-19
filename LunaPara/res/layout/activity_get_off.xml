@@ -1,15 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/main_bg"
+    android:gravity="center"
     android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvDriverName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#fff"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/tvPlateNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textColor="#fff"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/tvModelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textColor="#fff"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/tvModelMake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="#fff"
+        android:textSize="17dp" />
 
     <ImageView
         android:id="@+id/ivStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
         android:src="@drawable/get_off" />
 
-</RelativeLayout>
+</LinearLayout>
